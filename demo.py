@@ -7,10 +7,28 @@ See LICENSE for licensing information
 
 '''
 
+# Parameters of the Model
+timesteps = 24
+
+CROSS_EXCLUSION_FACTOR = 3
+
+def DIFFICULTY_ENGINE(selected_agent, all_agents):
+    return 0
+
+MAX_BUILD_SIZE = 5
+
+MAX_NOURISHMENT = 10
+MAX_REST = 10
+REST_DECR = 0.15
+
+INITIAL_NOURISHMENT = MAX_NOURISHMENT
+INITIAL_REST = MAX_REST
+INITIAL_BLOCKS = 0
+
 # create resources
-nourishment = Resource(10)
-rest = Resource(10)
-blocks = Resource(0)
+nourishment = Resource(INITIAL_NOURISHMENT)
+rest = Resource(INITIAL_REST)
+blocks = Resource(INITIAL_BLOCKS)
 
 # create different agents at play
 
@@ -19,17 +37,19 @@ child = Manager("child")
 
 # second tier agents
 eat = Worker("eat", 
-             lambda: 10 - nourishment.get(),
-             lambda: (nourishment.set(10), nourishment.incr()))
-play = Manager("play")
+             lambda: MAX_NOURISHMENT - nourishment.get(),
+             lambda: (nourishment.set(MAX_NOURISHMENT), nourishment.incr()))
+play = Manager("play", 
+               difficulty_engine = DIFFICULTY_ENGINE,
+               cross_exclusion = CROSS_EXCLUSION_FACTOR)
 sleep = Worker("sleep", 
-               lambda: (10 - rest.get()) / 6.0, 
-               lambda: (rest.set(10), blocks.set(0)))
+               lambda: MAX_REST - rest.get(), 
+               lambda: (rest.set(MAX_REST), blocks.set(0)))
 
 # third tier agents
 builder = Worker("builder",
-                 lambda: max(0, 5 - blocks.get()),
-                 lambda: blocks.set(min(blocks.get() + 1, 5)))
+                 lambda: max(0, MAX_BUILD_SIZE - blocks.get()),
+                 lambda: blocks.set(min(blocks.get() + 1, MAX_BUILD_SIZE)))
 wrecker = Worker("wrecker", 
                  lambda: blocks.get(),
                  lambda: blocks.set(0))
@@ -50,11 +70,9 @@ resource_history = []
 status_history = []
 winner_history = []
 
-time = 24
-
-for i in xrange(time):
+for i in xrange(timesteps):
     nourishment.decr()
-    rest.decr()
+    rest.decr(REST_DECR)
     child.run()
     resource_history.append((nourishment.get(), rest.get(), blocks.get()))
     status_history.append([x.get_status() for x in (eat, sleep, builder, wrecker)])
@@ -72,7 +90,7 @@ plt.plot(status_history)
 
 plt.subplot(313)
 plt.title("Active Agents")
-plt.xlim([0,time])
+plt.xlim([0,timesteps])
 plt.ylim([0,5])
 for i, winner in enumerate(winner_history):
     if i == 0 or winner is not winner_history[i-1]:

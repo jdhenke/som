@@ -14,10 +14,12 @@ class Agent:
 
 class Manager(Agent):
     
-    def __init__(self, name):
+    def __init__(self, name, difficulty_engine=lambda a,b:0, cross_exclusion=0):
         Agent.__init__(self, name)
         self.children = []
         self.selected_agent = None
+        self.difficulty_engine = difficulty_engine
+        self.cross_exclusion = cross_exclusion
     
     def add_child(self, agent):
         self.children.append(agent)
@@ -30,8 +32,7 @@ class Manager(Agent):
     
     def reconsider_selected_agent(self):
         other_agent = self.get_best_alternative()
-        # MODIFY THIS LINE FOR CROSS EXCLUSION
-        if self.selected_agent.get_status() < other_agent.get_status():
+        if self.selected_agent.get_status() + self.cross_exclusion < other_agent.get_status():
             self.selected_agent = other_agent
     
     def get_best_alternative(self):
@@ -40,8 +41,8 @@ class Manager(Agent):
         return alternatives[0]
 
     def get_status(self):
-        # MODIFY THIS LINE FOR PRINCIPLE OF NONCOMPROMISE
-        return self.selected_agent.get_status()
+        return self.selected_agent.get_status() -\
+            self.difficulty_engine(self.selected_agent, self.children)
 
     def winner(self):
         return self.selected_agent.winner()
@@ -78,7 +79,3 @@ class Resource:
     
     def __str__(self):
         return str(self.value)
-
-
-if __name__ == '__main__':
-    demo()
