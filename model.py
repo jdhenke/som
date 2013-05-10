@@ -44,6 +44,9 @@ class Manager(Agent):
         return self.selected_agent.get_status() -\
             self.difficulty_engine(self.selected_agent, self.children)
 
+    def get_conflict(self):
+        return self.difficulty_engine(self.selected_agent, self.children)
+
     def winner(self):
         return self.selected_agent.winner()
 
