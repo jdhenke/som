@@ -20,3 +20,7 @@ python demo.py
 ```
 
 This will produce each of the figures in the paper as *.png files in the current directory.
+
+## License
+Copyright (c) 2013 Joseph Henke
+See LICENSE for licensing information

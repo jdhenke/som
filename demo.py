@@ -13,6 +13,19 @@ See LICENSE for licensing information
 
 
 def simulate(DIFFICULTY_FACTOR=0, CROSS_EXCLUSION_FACTOR=0):
+    '''
+    Runs a simulation of 24 timesteps and return the history
+
+    @DIFFICULTY_FACTOR determines how much the conflict within an agent is 
+        considered in choosing which agent to be active.
+    @CROSS_EXCLUSION_FACTOR detrmines by how much an unselected_agent's Status
+        must be beyond the currently selected_agent to change to that
+
+    @returns a dictionary recording the history of run
+        keys - idenifying poperty
+        values - the list of the values of that property at each time step
+
+    '''
 
     # Setup
 
