@@ -14,7 +14,7 @@ source env/bin/activate
 pip install matplotlib
 ```
 
-Then to run the model simply run
+Now let's run the model.
 ```bash
 python demo.py
 ```
