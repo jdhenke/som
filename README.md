@@ -11,6 +11,7 @@ git clone git@github.com:jdhenke/som.git
 cd som
 virtualenv env --no-site-packages
 source env/bin/activate
+pip install numpy
 pip install matplotlib
 ```
 
