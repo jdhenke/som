@@ -1,4 +1,22 @@
-som
+Reifying the Principle of Noncompromise
 ===
 
-A reification of the Principle of Noncompromise
+This repo contains the code used for the dynamic model described in my final report for 6.868. This README walks you through how to setup and run the code to generate the figures presented in the paper.
+
+## Getting Started
+
+First, let's get the necessary tools.
+```bash
+git clone git@github.com:jdhenke/som.git
+cd som
+virtualenv env --no-site-packages
+source env/bin/activate
+pip install matplotlib
+```
+
+Then to run the model simply run
+```bash
+python demo.py
+```
+
+This will produce each of the figures in the paper as *.png files in the current directory.
